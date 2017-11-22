@@ -1,11 +1,15 @@
-#Hallie Kaufman 
-#SI 206 
+#Hallie Kaufman
+#SI 206
 #Data-Oriented Programming with APIs and Visualization Final Project
 
 #Below are the necessary import statements for the project
 import json
+import sqlite3
 import pprint
-#setting up cache:
+
+
+api1 = 
+#Setting up cache:
 CACHE_FNAME = "APIsAndVisualization_cache.json"
 try:
     cache_file = open(CACHE_FNAME, 'r')
