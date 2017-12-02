@@ -3,12 +3,15 @@
 #Data-Oriented Programming with APIs and Visualization Final Project
 
 #Below are the necessary import statements for the project
+import requests
 import json
 import sqlite3
+import datetime
 import pprint
+import Facebook.py
 
 
-api1 = 
+
 #Setting up cache:
 CACHE_FNAME = "APIsAndVisualization_cache.json"
 try:
@@ -18,3 +21,13 @@ try:
     CACHE_DICTION = json.loads(cache_contents)
 except:
     CACHE_DICTION = {}
+
+#Facebook API
+print ("Facebook\n")
+def FB_Time_Frame():
+    days_list = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+
+
+
+fb_access_token = ''
+
