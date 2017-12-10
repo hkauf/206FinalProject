@@ -32,7 +32,6 @@ def get_facebook_data(access_token_in):
         print('fetching data...')
         graph_api = facebook.GraphAPI(access_token = access_token_in, version= '2.1')
         pictures = graph_api.request('me?fields=id,name,photos.limit(100){created_time,picture,likes{id}}')
-        # posts = graph_api.request('me?fields=posts.limit(100){status_type,created_time,likes{id}}')
 
         CACHE_DICTION[access_token_in] = pictures
         wfile = open(CACHE_FNAME, 'w')
@@ -40,7 +39,6 @@ def get_facebook_data(access_token_in):
         wfile.close()
 
     return pictures
-   
 
 data = get_facebook_data(Facebook.access_token)
 pprint (data)
@@ -95,7 +93,6 @@ for item in show_list:
     cur.execute('INSERT INTO Facebook (user_id, created_time, PictureID, Likes, Day) VALUES(?, ?, ?, ?, ?)', (item[0], item[3], item[2], item[1], item[4]))
 conn.commit()
 
-
 print('\nSOCIAL MEDIA REPORT: SHOWS THE FREQUENCY OF HOW OFTEN I POST PICTURES ONTO FACEBOOK BASED ON DAY \n')
 cur.execute('SELECT Day FROM Facebook')
 weekday_freq = {'Monday': 0, 'Tuesday': 0, 'Wednesday': 0, 'Thursday': 0, 'Friday': 0, 'Saturday': 0, 'Sunday': 0}
@@ -103,6 +100,5 @@ for day in cur:
     weekday_freq[day[0]] += 1
     
 print(weekday_freq)
-
 
 cur.close()
