@@ -44,10 +44,19 @@ def get_facebook_data(access_token_in):
 
 data = get_facebook_data(Facebook.access_token)
 pprint (data)
+  
+#SQL
+conn = sqlite3.connect('FBData.sqlite')
+cur = conn.cursor()
+
+cur.execute('DROP TABLE IF EXISTS Facebook')
+cur.execute('CREATE TABLE Facebook (user_id VARCHAR(128), created_time TIMESTAMP, PictureID VARCHAR(128), Likes VARCHAR(128), Day VARCHAR(128))')
+
 print('\n Pairing Data \n')
 
 def pairing_data(data):
     list_of_data = []
+    user_id_num = data['id']
     post_photos = data['photos']['data']
     for photo in post_photos:
         if 'likes' in photo:
@@ -61,23 +70,39 @@ def pairing_data(data):
 
         print('Time Created: ' + str(photo['created_time']))
 
+
+        split_stamp = photo['created_time'].split('-')
+        year = split_stamp[0]
+        month = split_stamp[1]
+        day_time_split = split_stamp[2].split('T')
+        day = day_time_split[0]
+
+        days_tup= (year, month, day)
+        weekday = datetime.date(int(year), int(month), int(day)).weekday()
+
+        weekdays_dict = {0: 'Monday', 1: 'Tuesday', 2: 'Wednesday', 3: 'Thursday', 4: 'Friday', 5: 'Saturday', 6: 'Sunday'}
+        weekday = weekdays_dict[weekday]
+
+        print ('Weekday: ' + str(weekday))
         print ('\n')
-
-        day_time = get_day_time(photo)
-        list_of_data.append((numlikes, photo['picture'], photo['created_time']))
-
+        
+        list_of_data.append((user_id_num, numlikes, photo['picture'], photo['created_time'], weekday))
     return list_of_data
-show_tuples = pairing_data(data)
 
-def get_day_time(photo):
-    split_stamp = photo['created_time'].split('-')
+show_list = pairing_data(data)
+print(show_list)
+for item in show_list:
+    cur.execute('INSERT INTO Facebook (user_id, created_time, PictureID, Likes, Day) VALUES(?, ?, ?, ?, ?)', (item[0], item[3], item[2], item[1], item[4]))
+conn.commit()
 
 
+print('\nSOCIAL MEDIA REPORT: SHOWS THE FREQUENCY OF HOW OFTEN I POST PICTURES ONTO FACEBOOK BASED ON DAY \n')
+cur.execute('SELECT Day FROM Facebook')
+weekday_freq = {'Monday': 0, 'Tuesday': 0, 'Wednesday': 0, 'Thursday': 0, 'Friday': 0, 'Saturday': 0, 'Sunday': 0}
+for day in cur:
+    weekday_freq[day[0]] += 1
+    
+print(weekday_freq)
 
 
-#SQL
-conn = sqlite3.connect('FBData.sqlite')
-cur = conn.cursor()
-
-cur.execute('DROP TABLE IF EXISTS Facebook')
-cur.execute('CREATE TABLE Facebook (user_id TEXT, created_time TIMESTAMP, Photos TEXT, Likes INTEGER, Day TEXT)')
+cur.close()
