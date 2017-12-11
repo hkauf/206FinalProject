@@ -89,7 +89,7 @@ def pairing_data(data): #new function that takes the input data (the output from
             weekday = datetime.date(int(year), int(month), int(day)).weekday() #getting specific weekday
 
             weekdays_dict = {0: 'Monday', 1: 'Tuesday', 2: 'Wednesday', 3: 'Thursday', 4: 'Friday', 5: 'Saturday', 6: 'Sunday'} #dictionary of weekdays and their corresponding number in the datetime module
-            weekday = weekdays_dict[weekday] putting the data together with the weekday dict
+            weekday = weekdays_dict[weekday] #putting the data together with the weekday dict
 
             print ('Weekday: ' + str(weekday)) #printing the weekday that the post was posted
             print ('\n') #space
