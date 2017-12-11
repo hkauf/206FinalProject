@@ -23,6 +23,7 @@ except: #except
 
 #Facebook API
 print ("Facebook Data Collection\n") #print statement letting you know the Facebook Data is beginning
+#takes in access token and makes a request to the Facebook API to return data about 100 pictures I posted
 
 def get_facebook_data(access_token_in): #new function to make Facebook data request, takes in the access token
     if access_token_in in CACHE_DICTION: #check if the access token is in the cache file
@@ -44,6 +45,8 @@ data = get_facebook_data(Facebook.access_token) #call the function
 pprint (data) #pretty print the data from the function above
 
 #SQL
+#creates database about Facebook Photo Data
+
 conn = sqlite3.connect('FBData.sqlite') #creating database
 cur = conn.cursor() #connecting cursor
 
@@ -52,6 +55,7 @@ cur.execute('CREATE TABLE Facebook (user_id VARCHAR(128), created_time TIMESTAMP
 
 #Pairing Data into a List of Tuples
 print('\n Pairing Data \n') #print this statement to let the user know the data is being paired
+#takes the data that was found from the request and returns the necessary information for the db in an organized list of tuples
 
 def pairing_data(data): #new function that takes the input data (the output from the previous function)
     user_id = data['id'] #establishing the user_id from the data
@@ -103,11 +107,15 @@ show_list = pairing_data(data) #calling the function
 print(show_list) #printing the function
 
 #Adding Information into SQL Table
+#takes information from the list of tuples and inserts into table
+
 for item in show_list: #for each specific photo in the function
     cur.execute('INSERT INTO Facebook (user_id, created_time, PictureWebsite, Likes, Day) VALUES(?, ?, ?, ?, ?)', (item[0], item[3], item[2], item[1], item[4])) #insert the data into the SQL DB
 conn.commit() #commit the posts
 
 #Social Media Report counting how many times I posted photos on Facebook based on day
+#frequency counter
+
 print('\nSOCIAL MEDIA REPORT: SHOWS THE FREQUENCY OF HOW OFTEN I POST PICTURES ONTO FACEBOOK BASED ON DAY \n') #print this to let the user know what is under
 cur.execute('SELECT Day FROM Facebook') #selecting the days in the Facebook db
 weekday_freq = {'Monday': 0, 'Tuesday': 0, 'Wednesday': 0, 'Thursday': 0, 'Friday': 0, 'Saturday': 0, 'Sunday': 0} #frequency counter dictionary, numbers set to 0
